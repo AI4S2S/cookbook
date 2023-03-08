@@ -33,7 +33,3 @@ Target: US temperature from ERA5 (see notebook from `scratch`)
 10.	Dimensionality reduction
 11.	Fit the ML model (Ridge) and transform to the test data
 12.	Evaluate the results (skill metrics, visualization) and workflow (time and memory usage)
-
-
-
-
