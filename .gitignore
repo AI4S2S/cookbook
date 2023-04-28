@@ -130,3 +130,6 @@ dmypy.json
 
 # wandb cache for training
 wandb
+
+# vscode
+.vscode
