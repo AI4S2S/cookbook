@@ -1,6 +1,5 @@
 """Transformer with multi head attention."""
 
-
 import torch
 from torch import nn
 from torch import Tensor
@@ -28,7 +27,8 @@ def scaled_dot_product_attention(query: Tensor, key: Tensor, value: Tensor) -> T
 class AttentionHead(nn.Module):
     def __init__(self, dim_in: int, dim_q: int, dim_k: int):
         """
-        A single attention head that computes attention scores between the query, key, and value tensors.
+        A single attention head that computes attention scores between the query, key,
+        and value tensors.
 
         Args:
             dim_in (int): The input dimension of the query, key, and value tensors.
@@ -45,12 +45,12 @@ class AttentionHead(nn.Module):
         Compute attention scores between the query, key, and value tensors.
 
         Args:
-            query (Tensor): The query tensor of shape (batch_size, num_query, query_dim).
-            key (Tensor): The key tensor of shape (batch_size, num_key, key_dim).
-            value (Tensor): The value tensor of shape (batch_size, num_value, value_dim).
+            query (Tensor): The query tensor of shape (batch_size, num_query, query_dim)
+            key (Tensor): The key tensor of shape (batch_size, num_key, key_dim)
+            value (Tensor): The value tensor of shape (batch_size, num_value, value_dim)
 
         Returns:
-            Tensor: The attention tensor of shape (batch_size, num_query, value_dim).
+            Tensor: The attention tensor of shape (batch_size, num_query, value_dim)
         """
         return scaled_dot_product_attention(self.q(query), self.k(key), self.v(value))
 
