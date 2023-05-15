@@ -34,6 +34,9 @@ Target: US temperature from ERA5 (see notebook from `scratch`)
 11.	Fit the ML model (Ridge) and transform to the test data
 12.	Evaluate the results (skill metrics, visualization) and workflow (time and memory usage)
 
+The workflow is illustrated below:
+![workflow](./assets/regression.PNG)
+
 ## Use cases
 - Predict 2 meter temperature with sea surface temperature using linear regression [notebook](./workflow/pred_temperature_ridge.ipynb)
 - Predict 2 meter temperature with sea surface temperature using LSTM network [notebook](./workflow/pred_temperature_LSTM.ipynb)
