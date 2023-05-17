@@ -279,7 +279,7 @@ class TransformerDecoder(nn.Module):
         for layer in self.layers:
             tgt = layer(tgt, memory)
 
-        return torch.softmax(self.linear(tgt), dim=-1)
+        return self.linear(tgt)
 
 
 class Transformer(nn.Module):
