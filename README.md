@@ -36,3 +36,5 @@ Target: US temperature from ERA5 (see notebook from `scratch`)
 
 ## Use cases
 - Predict 2 meter temperature with sea surface temperature using linear regression [notebook](./workflow/pred_temperature_ridge.ipynb)
+- Predict 2 meter temperature with sea surface temperature using LSTM network [notebook](./workflow/pred_temperature_LSTM.ipynb)
+- Predict 2 meter temperature with sea surface temperature using transformer with multi-head attention [notebook](./workflow/pred_temperature_transformer.ipynb)

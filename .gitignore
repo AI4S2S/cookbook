@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# wandb cache for training
+wandb
+models
+
+# vscode
+.vscode
