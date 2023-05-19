@@ -25,6 +25,8 @@ def scaled_dot_product_attention(query: Tensor, key: Tensor, value: Tensor) -> T
 
 
 class AttentionHead(nn.Module):
+    """Create a single attention head."""
+
     def __init__(self, dim_in: int, dim_q: int, dim_k: int):
         """
         A single attention head that computes attention scores between the query, key,
@@ -56,6 +58,8 @@ class AttentionHead(nn.Module):
 
 
 class MultiHeadAttention(nn.Module):
+    """Create multiple attention heads."""
+
     def __init__(self, num_heads: int, dim_in: int, dim_q: int, dim_k: int):
         """
         Initializes a Multi-Head Attention module.
@@ -164,6 +168,8 @@ class Residual(nn.Module):
 
 
 class TransformerEncoderLayer(nn.Module):
+    """Create encoder layer of transformer."""
+
     def __init__(
         self,
         dim_model: int = 512,
@@ -172,6 +178,16 @@ class TransformerEncoderLayer(nn.Module):
         dropout: float = 0.1,
         activation: nn.Module = nn.ReLU(),
     ):
+        """
+        Initialize a encoder layer.
+        
+        Args:
+        - dim_model (int): The dimensionality of the input sequence.
+        - num_heads (int): The number of attention heads to use.
+        - dim_feedforward (int, optional): The dimensionality of the hidden layer.
+        - dropout (float, optional): The dropout probability to apply.
+        - activation (nn.Module, optional): The activation function to use.
+        """
         super().__init__()
         dim_q = dim_k = max(dim_model // num_heads, 1)
         self.attention = Residual(
@@ -186,11 +202,22 @@ class TransformerEncoderLayer(nn.Module):
         )
 
     def forward(self, src: Tensor) -> Tensor:
+        """
+        Compute a forward pass through the encoder layer.
+
+        Args:
+            src (Tensor): The input tensor(s) to the sublayer.
+
+        Returns:
+            Tensor: The output tensor of the encoder layer.
+        """
         src = self.attention(src, src, src)
         return self.feed_forward(src)
 
 
 class TransformerEncoder(nn.Module):
+    """Create encoder part of transformer."""
+
     def __init__(
         self,
         num_layers: int = 6,
@@ -200,6 +227,17 @@ class TransformerEncoder(nn.Module):
         dropout: float = 0.1,
         activation: nn.Module = nn.ReLU(),
     ):
+        """
+        Initialize the encoder part of transformer.
+        
+        Args:
+        - num_layers (int): The number of encoder layers to create.
+        - dim_model (int): The dimensionality of the input sequence.
+        - num_heads (int): The number of attention heads to use.
+        - dim_feedforward (int, optional): The dimensionality of the hidden layer.
+        - dropout (float, optional): The dropout probability to apply.
+        - activation (nn.Module, optional): The activation function to use.
+        """
         super().__init__()
         self.layers = nn.ModuleList(
             [
@@ -211,6 +249,15 @@ class TransformerEncoder(nn.Module):
         )
 
     def forward(self, src: Tensor) -> Tensor:
+        """
+        Compute a forward pass through the encoder module.
+
+        Args:
+            src (Tensor): The input tensor(s) to the sublayer.
+
+        Returns:
+            Tensor: The output tensor of the encoder module.
+        """
         seq_len, dimension = src.size(1), src.size(2)
         src += position_encoding(seq_len, dimension)
         for layer in self.layers:
@@ -220,34 +267,72 @@ class TransformerEncoder(nn.Module):
 
 
 class TransformerDecoderLayer(nn.Module):
+    """Create decoder layer of transformer."""
+
     def __init__(
         self,
         dim_model: int = 512,
         dim_output: int = 1,
     ):
+        """
+        Initialize a decoder layer.
+        
+        Args:
+        - dim_model (int): The dimensionality of the input sequence.
+        - dim_output (int): The dimensionality of the output layer.
+        """
         super().__init__()
         self.linear = nn.Linear(dim_model, dim_output)
 
     def forward(self, memory: Tensor) -> Tensor:
+        """
+        Compute a forward pass through the decoder layer.
+
+        Args:
+            memory (Tensor): The input tensor(s) from the sublayer.
+
+        Returns:
+            Tensor: The output tensor of the decoder layer.
+        """
         return self.linear(memory)
 
 
 class TransformerDecoder(nn.Module):
+    """Create decoder part of transformer."""
+
     def __init__(
         self,
         dim_model: int = 512,
         dim_output: int = 1,
     ):
+        """
+        Initialize a decoder part of transformer.
+        
+        Args:
+        - dim_model (int): The dimensionality of the input sequence.
+        - dim_output (int): The dimensionality of the output layer.
+        """        
         super().__init__()
         self.layer = TransformerDecoderLayer(dim_model, dim_output)
 
     def forward(self, memory: Tensor) -> Tensor:
+        """
+        Compute a forward pass through the decoder.
+
+        Args:
+            memory (Tensor): The input tensor(s) from the sublayer.
+
+        Returns:
+            Tensor: The output tensor of the decoder.
+        """
         tgt = self.layer(memory)
 
         return tgt.mean(dim=1)
 
 
 class Transformer(nn.Module):
+    """Build transformer with encoder and decoder."""
+
     def __init__(
         self,
         num_encoder_layers: int = 6,
@@ -258,6 +343,18 @@ class Transformer(nn.Module):
         dropout: float = 0.1,
         activation: nn.Module = nn.ReLU(),
     ):
+        """
+        Initialize the transformer.
+        
+        Args:
+        - num_encoder_layers (int): The number of encoder layers to create.
+        - dim_model (int): The dimensionality of the input sequence.
+        - num_heads (int): The number of attention heads to use.
+        - dim_feedforward (int, optional): The dimensionality of the hidden layer.
+        - dim_output (int): The dimensionality of the output layer.
+        - dropout (float, optional): The dropout probability to apply.
+        - activation (nn.Module, optional): The activation function to use.
+        """
         super().__init__()
         self.encoder = TransformerEncoder(
             num_layers=num_encoder_layers,
@@ -273,4 +370,13 @@ class Transformer(nn.Module):
         )
 
     def forward(self, src: Tensor) -> Tensor:
+        """
+        Compute a forward pass through the transformer.
+
+        Args:
+            src (Tensor): The input tensor(s) to the encoder.
+
+        Returns:
+            Tensor: The output tensor of the decoder.
+        """        
         return self.decoder(self.encoder(src))
