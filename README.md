@@ -1,28 +1,12 @@
 # cookbook
-Your recipe for building and executing your workflow with s2spy suite.
-
-## Tasks and missions
-- Finish the entire workflow with s2spy
-  - Apply basic workflow to CMIP6 data
-  - Apply basic workflow to EC46 data
-- Make a pipeline?
-
-## New features to expect
-- Multiple lags within RGDR
-- Double cross-validation to the workflow
-- Implement the linear algebra type of dimensionality reduction e.g. FT (and contribute to `xeofs`?).
-- Parallel computing and memory usage optimization with `Dask` and `Zarr`
-- Create calendar object compatible preprocessor
-- New preprocessors that can deal with NaNs in different ways (e.g. mean, interpolation, etc.)
-
-If the preprocessor becomes more comprehensive and independent, we may want to split it off, just like `lilio`.
+Your recipe for building and executing your workflow with `s2spy` suite.
 
 ## Basic workflow
-Here is an example of a basic workflow with s2spy suite.
+Here is an example of a basic workflow for regression modelling with `s2spy` and `lilio`.
 
 1. Define calendar
 2. Input data: SST and soil moisture from ERA5 <br>
-Target: US temperature from ERA5 (see notebook from `scratch`)
+Target: US temperature from ERA5
 3.	Map the calendar to the data
 4.	Train-test split based on the anchor years-> 70%/30% split (outer cv loop)
 5.	Mask the data to get only full training years
@@ -40,4 +24,21 @@ The workflow is illustrated below:
 ## Use cases
 - Predict 2 meter temperature with sea surface temperature using linear regression [notebook](./workflow/pred_temperature_ridge.ipynb)
 - Predict 2 meter temperature with sea surface temperature using LSTM network [notebook](./workflow/pred_temperature_LSTM.ipynb)
+- Predict 2 meter temperature with sea surface temperature using autoencoder network [notebook](./workflow/pred_temperature_autoencoder.ipynb)
 - Predict 2 meter temperature with sea surface temperature using transformer with multi-head attention [notebook](./workflow/pred_temperature_transformer.ipynb)
+
+## Tasks and missions
+- Finish the entire workflow with s2spy
+  - Apply basic workflow to CMIP6 data
+  - Apply basic workflow to EC46 data
+- Make a pipeline?
+
+## New features to expect
+- Multiple lags within RGDR
+- Double cross-validation to the workflow
+- Implement the linear algebra type of dimensionality reduction e.g. FT (and contribute to `xeofs`?).
+- Parallel computing and memory usage optimization with `Dask` and `Zarr`
+- Create calendar object compatible preprocessor
+- New preprocessors that can deal with NaNs in different ways (e.g. mean, interpolation, etc.)
+
+If the preprocessor becomes more comprehensive and independent, we may want to split it off, just like `lilio`.
