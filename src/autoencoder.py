@@ -123,12 +123,12 @@ def feed_forward(
     Create a feedforward network module with two linear layers and an activation function.
 
     Args:
-        dim_input (int, optional): The dimensionality of the input tensor
-        dim_feedforward (int, optional): The dimensionality of the hidden layer
-        activation (nn.Module, optional): The activation function to use
+        dim_input (int, optional): The dimensionality of the input tensor.
+        dim_feedforward (int, optional): The dimensionality of the hidden layer.
+        activation (nn.Module, optional): The activation function to use.
 
     Returns:
-        nn.Module: The feedforward network module
+        nn.Module: The feedforward network module.
     """
     return nn.Sequential(
         nn.Linear(dim_input, dim_feedforward),
@@ -143,9 +143,9 @@ class Residual(nn.Module):
         Apply residual connections to a sublayer module.
 
         Args:
-            sublayer (nn.Module): The sublayer module to apply the residual connection to
-            dimension (int): The dimensionality of the sublayer input/output tensors
-            dropout (float, optional): The dropout probability to apply
+            sublayer (nn.Module): The sublayer module to apply the residual connection to.
+            dimension (int): The dimensionality of the sublayer input/output tensors.
+            dropout (float, optional): The dropout probability to apply (default: 0.1).
         """
         super().__init__()
         self.sublayer = sublayer
@@ -272,53 +272,29 @@ class TransformerDecoderLayer(nn.Module):
     def __init__(
         self,
         dim_model: int = 512,
-        num_heads: int = 6,
-        dim_feedforward: int = 2048,
-        dropout: float = 0.1,
-        activation: nn.Module = nn.ReLU(),
+        dim_output: int = 1,
     ):
         """
         Initialize a decoder layer.
         
         Args:
         - dim_model (int): The dimensionality of the input sequence.
-        - num_heads (int): The number of attention heads to use.
-        - dim_feedforward (int, optional): The dimensionality of the hidden layer.
-        - dropout (float, optional): The dropout probability to apply.
-        - activation (nn.Module, optional): The activation function to use.
+        - dim_output (int): The dimensionality of the output layer.
         """
         super().__init__()
-        dim_q = dim_k = max(dim_model // num_heads, 1)
-        self.attention_1 = Residual(
-            MultiHeadAttention(num_heads, dim_model, dim_q, dim_k),
-            dimension=dim_model,
-            dropout=dropout,
-        )
-        self.attention_2 = Residual(
-            MultiHeadAttention(num_heads, dim_model, dim_q, dim_k),
-            dimension=dim_model,
-            dropout=dropout,
-        )
-        self.feed_forward = Residual(
-            feed_forward(dim_model, dim_feedforward, activation),
-            dimension=dim_model,
-            dropout=dropout,
-        )
+        self.linear = nn.Linear(dim_model, dim_output)
 
-    def forward(self, tgt: Tensor, memory: Tensor) -> Tensor:
+    def forward(self, memory: Tensor) -> Tensor:
         """
         Compute a forward pass through the decoder layer.
 
         Args:
-            tgt (Tensor): The input tensor(s) to the decoder.
             memory (Tensor): The input tensor(s) from the sublayer.
 
         Returns:
             Tensor: The output tensor of the decoder layer.
         """
-        tgt = self.attention_1(tgt, tgt, tgt)
-        tgt = self.attention_2(tgt, memory, memory)
-        return self.feed_forward(tgt)
+        return self.linear(memory)
 
 
 class TransformerDecoder(nn.Module):
@@ -326,52 +302,32 @@ class TransformerDecoder(nn.Module):
 
     def __init__(
         self,
-        num_layers: int = 6,
         dim_model: int = 512,
-        num_heads: int = 8,
-        dim_feedforward: int = 2048,
-        dropout: float = 0.1,
-        activation: nn.Module = nn.ReLU(),
+        dim_output: int = 1,
     ):
         """
-        Initialize the decoder part of transformer.
+        Initialize a decoder part of transformer.
         
         Args:
-        - num_layers (int): The number of encoder layers to create.
         - dim_model (int): The dimensionality of the input sequence.
-        - num_heads (int): The number of attention heads to use.
-        - dim_feedforward (int, optional): The dimensionality of the hidden layer.
-        - dropout (float, optional): The dropout probability to apply.
-        - activation (nn.Module, optional): The activation function to use.
-        """
+        - dim_output (int): The dimensionality of the output layer.
+        """        
         super().__init__()
-        self.layers = nn.ModuleList(
-            [
-                TransformerDecoderLayer(
-                    dim_model, num_heads, dim_feedforward, dropout, activation
-                )
-                for _ in range(num_layers)
-            ]
-        )
-        self.linear = nn.Linear(dim_model, dim_model)
+        self.layer = TransformerDecoderLayer(dim_model, dim_output)
 
-    def forward(self, tgt: Tensor, memory: Tensor) -> Tensor:
+    def forward(self, memory: Tensor) -> Tensor:
         """
         Compute a forward pass through the decoder.
 
         Args:
-            tgt (Tensor): The input tensor(s) to the decoder.
             memory (Tensor): The input tensor(s) from the sublayer.
 
         Returns:
             Tensor: The output tensor of the decoder.
         """
-        seq_len, dimension = tgt.size(1), tgt.size(2)
-        tgt += position_encoding(seq_len, dimension)
-        for layer in self.layers:
-            tgt = layer(tgt, memory)
+        tgt = self.layer(memory)
 
-        return self.linear(tgt)
+        return tgt.mean(dim=1)
 
 
 class Transformer(nn.Module):
@@ -380,10 +336,10 @@ class Transformer(nn.Module):
     def __init__(
         self,
         num_encoder_layers: int = 6,
-        num_decoder_layers: int = 6,
         dim_model: int = 512,
         num_heads: int = 6,
         dim_feedforward: int = 2048,
+        dim_output: int = 1,
         dropout: float = 0.1,
         activation: nn.Module = nn.ReLU(),
     ):
@@ -392,10 +348,10 @@ class Transformer(nn.Module):
         
         Args:
         - num_encoder_layers (int): The number of encoder layers to create.
-        - num_decoder_layers (int): The number of decoder layers to create.
         - dim_model (int): The dimensionality of the input sequence.
         - num_heads (int): The number of attention heads to use.
         - dim_feedforward (int, optional): The dimensionality of the hidden layer.
+        - dim_output (int): The dimensionality of the output layer.
         - dropout (float, optional): The dropout probability to apply.
         - activation (nn.Module, optional): The activation function to use.
         """
@@ -409,23 +365,18 @@ class Transformer(nn.Module):
             activation=activation,
         )
         self.decoder = TransformerDecoder(
-            num_layers=num_decoder_layers,
             dim_model=dim_model,
-            num_heads=num_heads,
-            dim_feedforward=dim_feedforward,
-            dropout=dropout,
-            activation=activation,
+            dim_output=dim_output,
         )
 
-    def forward(self, src: Tensor, tgt: Tensor) -> Tensor:
+    def forward(self, src: Tensor) -> Tensor:
         """
         Compute a forward pass through the transformer.
 
         Args:
             src (Tensor): The input tensor(s) to the encoder.
-            tgt (Tensor): The input tensor(s) to the decoder.
 
         Returns:
             Tensor: The output tensor of the decoder.
-        """
-        return self.decoder(tgt, self.encoder(src))
+        """        
+        return self.decoder(self.encoder(src))
