@@ -7,7 +7,7 @@ Test data used in the example workflow notebooks are sea surface temperature (SS
 To prepare the test data yourself, first you need to download the SST and T2M fields of ERA5 dataset from CDS. It is recommended to download these fields using [`era5cli`](https://era5cli.readthedocs.io/en/stable/). For instance, for the T2M field, you can collect the data via the following command:
 
 ```sh
-era5cli hourly --variables 2m_temperature --startyear 1950 --endyear 2021 --area 70 225 30 300
+era5cli hourly --variables 2m_temperature --startyear 1959 --endyear 2021 --area 70 225 30 300
 ```
 
 It is the same for the SST, but with different area (`--area 50 175 25 240`).
