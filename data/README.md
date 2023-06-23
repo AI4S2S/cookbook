@@ -29,3 +29,6 @@ cdo remapbil,r180x90 t2m_1959-2021_1_12_daily_025deg.nc t2m_1959-2021_1_12_daily
 It is the same for the SST, but with even coarser resolution (5 degree).
 
 Now the SST field is ready, we still need to follow this [notebook](./prepare_test_data.ipynb) to prepare the clustered T2M data.
+
+## License
+Data used here is generated using Copernicus Climate Change Service information and for more information about licensing, please check the [Licence Agreement](https://cds.climate.copernicus.eu/cdsapp/#!/terms/licence-to-use-copernicus-products) for Copernicus Products.
