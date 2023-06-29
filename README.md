@@ -2,6 +2,8 @@
 ## Recipe for building and executing your workflow with `s2spy` suite.
 This repo provides several tutorial notebooks showing how [`s2spy`](https://github.com/AI4S2S/s2spy) and [`lilio`](https://github.com/AI4S2S/lilio) can faciliate your data-driven (sub)seasonal (S2S) forecasts workflow.
 
+<img src="./assets/concept_test_case.png" alt="usecase" width="600"/>
+
 ## Basic workflow
 Here is an example of a basic data-driven S2S forecasts workflow for regression modelling with [`s2spy`](https://github.com/AI4S2S/s2spy) and [`lilio`](https://github.com/AI4S2S/lilio).
 
@@ -27,7 +29,7 @@ Similarly, you can adapt this recipe to your deep learning workflow with a few c
 
 ## Tutorial notebooks
 
-The tutorial notebooks include a case study in which we attempt to predict surface temperature over US using the SST over Pacific. We use processed ERA5 fields to perform data-driven forecasts. More details about the data can be found in this [README.md](./data/README.md). 
+The tutorial notebooks include a case study in which we attempt to predict surface temperature over US using the SST over Pacific. We use processed ERA5 fields to perform data-driven forecasts. More details about the data can be found in this [README.md](./data/README.md).
 
 Before playing with these notebooks, please make sure that you have all the dependent packages installed. You can simply install the dependencies by go to this repo and run the following command:
 ```sh
