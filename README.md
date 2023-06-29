@@ -1,12 +1,14 @@
 # cookbook
-Your recipe for building and executing your workflow with `s2spy` suite.
+## Recipe for building and executing your workflow with `s2spy` suite.
+This repo provides several tutorial notebooks showing how [`s2spy`](https://github.com/AI4S2S/s2spy) and [`lilio`](https://github.com/AI4S2S/lilio) can faciliate your data-driven (sub)seasonal (S2S) forecasts workflow.
 
 ## Basic workflow
-Here is an example of a basic workflow for regression modelling with `s2spy` and `lilio`.
+Here is an example of a basic data-driven S2S forecasts workflow for regression modelling with [`s2spy`](https://github.com/AI4S2S/s2spy) and [`lilio`](https://github.com/AI4S2S/lilio).
 
 1. Define calendar
-2. Input data: SST and soil moisture from ERA5 <br>
-Target: US temperature from ERA5
+2. Prepare your data <br>
+Precursor: sea surface temperature (SST) from ERA5 <br>
+Target: US surface temperature (T2M) from ERA5
 3.	Map the calendar to the data
 4.	Train-test split based on the anchor years-> 70%/30% split (outer cv loop)
 5.	Mask the data to get only full training years
@@ -18,27 +20,26 @@ Target: US temperature from ERA5
 11.	Fit the ML model (Ridge) and transform to the test data
 12.	Evaluate the results (skill metrics, visualization) and workflow (time and memory usage)
 
-The workflow is illustrated below:
+This workflow is illustrated below:
 ![workflow](./assets/regression.PNG)
 
-## Use cases
-- Predict 2 meter temperature with sea surface temperature using linear regression [notebook](./workflow/pred_temperature_ridge.ipynb)
-- Predict 2 meter temperature with sea surface temperature using LSTM network [notebook](./workflow/pred_temperature_LSTM.ipynb)
-- Predict 2 meter temperature with sea surface temperature using autoencoder network [notebook](./workflow/pred_temperature_autoencoder.ipynb)
-- Predict 2 meter temperature with sea surface temperature using transformer with multi-head attention [notebook](./workflow/pred_temperature_transformer.ipynb)
+Similarly, you can adapt this recipe to your deep learning workflow with a few changes. You can find several examples in the next section.
 
-## Tasks and missions
-- Finish the entire workflow with s2spy
-  - Apply basic workflow to CMIP6 data
-  - Apply basic workflow to EC46 data
-- Make a pipeline?
+## install dependencies
 
-## New features to expect
-- Multiple lags within RGDR
-- Double cross-validation to the workflow
-- Implement the linear algebra type of dimensionality reduction e.g. FT (and contribute to `xeofs`?).
-- Parallel computing and memory usage optimization with `Dask` and `Zarr`
-- Create calendar object compatible preprocessor
-- New preprocessors that can deal with NaNs in different ways (e.g. mean, interpolation, etc.)
+## Tutorial notebooks
 
-If the preprocessor becomes more comprehensive and independent, we may want to split it off, just like `lilio`.
+The tutorial notebooks include a case study in which we attempt to predict surface temperature over US using the SST over Pacific. We use processed ERA5 fields to perform data-driven forecasts. More details about the data can be found in this [README.md](./data/README.md). 
+
+Before playing with these notebooks, please make sure that you have all the dependent packages installed. You can simply install the dependencies by go to this repo and run the following command:
+```sh
+pip install .
+```
+
+Below are recipes with different machine learning techniques:
+
+Predict surface temperature over US with SST over Pacific with [`s2spy`](https://github.com/AI4S2S/s2spy) and [`lilio`](https://github.com/AI4S2S/lilio):
+- [Data-driven S2S forecasts using linear regression](./workflow/pred_temperature_ridge.ipynb)
+- [Data-driven S2S forecasts using LSTM network](./workflow/pred_temperature_LSTM.ipynb)
+- [Data-driven S2S forecasts using autoencoder network](./workflow/pred_temperature_autoencoder.ipynb)
+- [Data-driven S2S forecasts using transformer with multi-head attention](./workflow/pred_temperature_transformer.ipynb)
