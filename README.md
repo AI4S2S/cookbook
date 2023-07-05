@@ -35,7 +35,7 @@ Before playing with these notebooks, please make sure that you have all the depe
 ```sh
 conda create -n s2scookbook python=3.10
 ```
-You can simply install the dependencies by go to this repo and run the following command:
+You can simply install the dependencies by going to this repo and run the following command:
 ```sh
 pip install .
 ```
