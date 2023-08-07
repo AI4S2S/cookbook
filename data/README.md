@@ -1,6 +1,6 @@
 ## Test data used in the example workflow notebooks
 
-Test data used in the example workflow notebooks are sea surface temperature (SST) over the Pacific and clustered 2 meter temperature (T2M) over the North America. The fields used here are processed outputs from original ERA5 dataset.
+Test data used in the example workflow notebooks are sea surface temperature (SST) over the Pacific and clustered 2 meter temperature (T2M) over the North America. The data is available on [Zenodo](https://zenodo.org/record/8186914). The fields used here are processed outputs from original ERA5 dataset.
 
 ## Reproduce test data
 
