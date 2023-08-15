@@ -134,3 +134,7 @@ models
 
 # vscode
 .vscode
+
+# data
+workflow/sst_daily_19*
+workflow/t2m_daily_19*

@@ -31,7 +31,11 @@ Similarly, you can adapt this recipe to your deep learning workflow with a few c
 
 The tutorial notebooks include a case study in which we attempt to predict surface temperature over US using the SST over Pacific. We use processed ERA5 fields to perform data-driven forecasts. More details about the data can be found in this [README.md](./data/README.md).
 
-Before playing with these notebooks, please make sure that you have all the dependent packages installed. You can simply install the dependencies by go to this repo and run the following command:
+Before playing with these notebooks, please make sure that you have all the dependent packages installed. For example, create a new environment with Python >3.8 and <3.11. 
+```sh
+conda create -n s2scookbook python=3.10
+```
+You can simply install the dependencies by going to this repo and run the following command:
 ```sh
 pip install .
 ```
