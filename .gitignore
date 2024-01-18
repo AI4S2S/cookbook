@@ -134,3 +134,6 @@ models
 
 # vscode
 .vscode
+
+# Large datasets
+*.nc
